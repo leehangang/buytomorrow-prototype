@@ -90,7 +90,8 @@ button{font:inherit;color:inherit}
 .mbar{display:none}
 @media (max-width:520px){
   html,body{height:100%;overflow:hidden}
-  .app{display:block;height:100%}
+  /* 휴대폰 브라우저는 주소창 · 아래 도구 막대가 화면을 가려서, 실제로 보이는 높이(dvh)에 맞춰요 */
+  .app{display:block;position:fixed;left:0;right:0;top:0;height:100%;height:100dvh}
   .mbar.on{display:flex;align-items:center;gap:10px;height:44px;padding:0 10px;background:var(--panel);border-bottom:1px solid var(--line);position:relative;z-index:60}
   .mbar button{height:32px;border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:0 10px;font-size:13px;cursor:pointer;flex:none}
   .mbar button[aria-expanded="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
@@ -105,7 +106,7 @@ button{font:inherit;color:inherit}
   .now-mini{display:none}
   .phbox{width:100%!important;height:100%!important}
   .ph{position:static;width:100%;height:100%;padding:0;border-radius:0;background:none;box-shadow:none;transform:none!important}
-  .scr{width:100%;height:100%;border-radius:0}
+  .ph .scr{width:100%;height:100%;border-radius:0}   /* 아래쪽 .scr 기본값(375×812)보다 우선하게 */
   .scr .sb{display:none}
   .scr .ib input{font-size:16px}
 }
@@ -1690,6 +1691,8 @@ function tick() {
 }
 function fit() {
   placeInfo();
+  const appEl = document.getElementById('app');
+  if (isPhone() && !(window.CSS && CSS.supports && CSS.supports('height', '100dvh'))) appEl.style.height = window.innerHeight + 'px'; else appEl.style.height = '';
   if (isPhone()) { document.getElementById('ph').style.transform = ''; const bx = document.getElementById('phbox'); bx.style.width = ''; bx.style.height = ''; return; }
   const st = document.getElementById('stage'), mobile = window.innerWidth < 760;
   const w = st.clientWidth - 32, h = st.clientHeight - (window.innerWidth < 1180 ? 56 : 32);
